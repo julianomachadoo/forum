@@ -1,22 +1,34 @@
 package com.github.julianomachadoo.forumapi.modelo;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.julianomachadoo.forumapi.modelo.StatusTopico.NAO_RESPONDIDO;
 import static java.time.LocalDateTime.now;
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.GenerationType.IDENTITY;
 
+@Entity
 public class Topico {
 
+	@Id @GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	private String titulo;
 	private String mensagem;
 	private LocalDateTime dataCriacao = now();
+	@Enumerated(STRING)
 	private StatusTopico status = NAO_RESPONDIDO;
+	@ManyToOne
 	private Usuario autor;
+	@ManyToOne
 	private Curso curso;
+	@OneToMany(mappedBy = "topico")
 	private List<Resposta> respostas = new ArrayList<>();
+
+	public Topico() {
+	}
 
 	public Topico(String titulo, String mensagem, Curso curso) {
 		this.titulo = titulo;

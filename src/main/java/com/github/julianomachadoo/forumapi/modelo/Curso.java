@@ -1,10 +1,22 @@
 package com.github.julianomachadoo.forumapi.modelo;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+@Entity
 public class Curso {
 
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	private String nome;
 	private String categoria;
+
+	public Curso() {
+	}
 
 	public Curso(String nome, String categoria) {
 		this.nome = nome;
