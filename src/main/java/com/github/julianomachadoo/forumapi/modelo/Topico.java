@@ -36,7 +36,6 @@ public class Topico {
 		this.curso = curso;
 	}
 
-
 	public Long getId() {
 		return id;
 	}
