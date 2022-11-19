@@ -3,11 +3,18 @@ package com.github.julianomachadoo.forumapi.controller.form;
 import com.github.julianomachadoo.forumapi.modelo.Curso;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 import com.github.julianomachadoo.forumapi.repository.CursoRepository;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotBlank;
 
 public class TopicoForm {
 
+
+    @NotBlank @Length(min = 5)
     private String titulo;
+    @NotBlank @Length(min = 10)
     private String mensagem;
+    @NotBlank
     private String nomeCurso;
 
     public String getTitulo() {
