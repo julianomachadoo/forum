@@ -1,5 +1,6 @@
 package com.github.julianomachadoo.forumapi.controller;
 
+import com.github.julianomachadoo.forumapi.controller.dto.DetalhesDoTopicoDTO;
 import com.github.julianomachadoo.forumapi.controller.dto.TopicoDTO;
 import com.github.julianomachadoo.forumapi.controller.form.TopicoForm;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
@@ -43,5 +44,11 @@ public class TopicosController {
 
         URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
         return ResponseEntity.created(uri).body(new TopicoDTO(topico));
+    }
+
+    @GetMapping("/{id}")
+    public DetalhesDoTopicoDTO detalhar(@PathVariable Long id) {
+        Topico topico = topicoRepository.getReferenceById(id);
+        return new DetalhesDoTopicoDTO(topico);
     }
 }
