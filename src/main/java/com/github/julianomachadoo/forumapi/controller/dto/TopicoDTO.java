@@ -1,11 +1,10 @@
 package com.github.julianomachadoo.forumapi.controller.dto;
 
 import com.github.julianomachadoo.forumapi.modelo.Topico;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class TopicoDTO {
 
@@ -67,7 +66,8 @@ public class TopicoDTO {
         return Objects.hash(id, titulo, mensagem, dataCriacao);
     }
 
-    public static List<TopicoDTO> converter(List<Topico> topicos) {
-        return topicos.stream().map(TopicoDTO::new).collect(Collectors.toList());
+    public static Page<TopicoDTO> converter(Page<Topico> topicos) {
+//        return topicos.stream().map(TopicoDTO::new).collect(Collectors.toList());
+        return topicos.map(TopicoDTO::new);
     }
 }
