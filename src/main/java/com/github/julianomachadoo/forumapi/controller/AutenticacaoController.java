@@ -1,6 +1,7 @@
 package com.github.julianomachadoo.forumapi.controller;
 
 import com.github.julianomachadoo.forumapi.config.security.TokenService;
+import com.github.julianomachadoo.forumapi.controller.dto.TokenDTO;
 import com.github.julianomachadoo.forumapi.controller.form.LoginForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +27,13 @@ public class AutenticacaoController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<?> autenticar(@RequestBody @Valid LoginForm form) {
+    public ResponseEntity<TokenDTO> autenticar(@RequestBody @Valid LoginForm form) {
         UsernamePasswordAuthenticationToken dadosLogin = form.converter();
 
         try {
             Authentication authentication = authManager.authenticate(dadosLogin);
             String token = tokenService.gerarToken(authentication);
-            System.out.println(token);
-            return ResponseEntity.ok().build();
-
+            return ResponseEntity.ok(new TokenDTO(token, "Bearer"));
         } catch (AuthenticationException e) {
             return ResponseEntity.badRequest().build();
         }
