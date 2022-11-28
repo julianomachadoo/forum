@@ -11,7 +11,7 @@ import java.io.IOException;
 public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
 
 
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
     public AutenticacaoViaTokenFilter(TokenService tokenService) {
         this.tokenService = tokenService;
@@ -22,8 +22,8 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String token = recuperarToken(request);
-        System.out.println(token);
-//        boolean valid = tokenService.isAValidToken();
+        boolean valid = tokenService.isAValidToken(token);
+        System.out.println(valid);
 
         filterChain.doFilter(request, response);
     }
@@ -31,6 +31,6 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
     private String recuperarToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token == null || token.isBlank() || !token.startsWith("Bearer ")) return null;
-        return token.substring(7, token.length());
+        return token.substring(7);
     }
 }
