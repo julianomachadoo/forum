@@ -23,7 +23,6 @@ public class TokenService {
         Usuario logado = (Usuario) authentication.getPrincipal();
         Date hoje = new Date();
         Date dataExpiracao = new Date(hoje.getTime() + Long.parseLong(expiration));
-
         return Jwts.builder()
                 .setIssuer("API do Fórum da Alura")
                 .setSubject(logado.getId().toString())
@@ -32,4 +31,9 @@ public class TokenService {
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
+
+//    public boolean isAValidToken() {
+//        return Jwts.parser();
+//
+//    }
 }
