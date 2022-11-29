@@ -4,22 +4,22 @@ import com.github.julianomachadoo.forumapi.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @EnableWebSecurity
 @Configuration
+@Profile("prod")
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -50,7 +50,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .antMatchers(GET, "/topicos/*").permitAll()
                 .antMatchers(POST, "/auth").permitAll()
                 .antMatchers(GET, "/actuator").permitAll()
-                .antMatchers(GET, "/actuator/*").permitAll()
+                .antMatchers(DELETE, "/topicos/*").hasRole("MODERADOR")
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -67,10 +67,11 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 "/configuration/security",
                 "/swagger-ui.html",
                 "/webjars/**",
+                "/h2-console",
+                "/h2-console/**",
                 // -- Swagger UI v3 (OpenAPI)
                 "/v3/api-docs/**",
                 "/swagger-ui/**"
-                // other public endpoints of your API may be appended to this array
-        );
+         );
     }
 }
