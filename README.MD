@@ -10,6 +10,8 @@
 
 > Status do Projeto: :heavy_check_mark: (Em desenvolvimento)
 
+...
+
 ### Tópicos
 
 :small_blue_diamond: [Descrição do projeto](#descrição-do-projeto)
@@ -62,7 +64,7 @@ ou [Eclipse](https://www.eclipse.org/downloads/)
 No terminal, clone o projeto:
 
 ```
-git clone https://github.com/julianomachadoo/certificate-generator
+git clone https://github.com/julianomachadoo/forum.git
 ```
 
 Com o projeto baixado, execute o seguinte comando para criar o jar:
