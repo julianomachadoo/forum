@@ -67,7 +67,6 @@ public class TopicoDTO {
     }
 
     public static Page<TopicoDTO> converter(Page<Topico> topicos) {
-//        return topicos.stream().map(TopicoDTO::new).collect(Collectors.toList());
         return topicos.map(TopicoDTO::new);
     }
 }

@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.github.julianomachadoo</groupId>
-	<artifactId>forum-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>forum</artifactId>
+	<version>1.0.0</version>
 	<name>forum-api</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -80,6 +80,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>forum</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
