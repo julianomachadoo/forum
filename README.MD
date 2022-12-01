@@ -100,14 +100,14 @@ abaixo é possível obter o token JWT de autenticação: </p>
 O token é valido por 24h e deve ser passado no header Authorization juntamente com o nome Bearer que representa o formato da autenticação:
 </p>
 
-![](https://github.com/julianomachadoo/forum/blob/main/img/deleteNaoAutorizado.gif?raw=true)
+![](https://github.com/julianomachadoo/forum/blob/main/img/postExemplo.gif?raw=true)
 
 <p align="justify">
 Para realizar a remoção de tópicos é necessario ter a ROLE de MODERADOR, caso contrário, o código recebido será o <font color=\"green\">403 Forbidden</font>:  
 </p>
 
 [//]: # (deleteNaoAutorizado)
-![](https://raw.githubusercontent.com/julianomachadoo/forum/main/img/endpoints.png)
+![](https://github.com/julianomachadoo/forum/blob/main/img/deleteNaoAutorizado.gif?raw=true)
 
 ...
 
