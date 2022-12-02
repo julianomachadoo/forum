@@ -17,7 +17,7 @@ public class Topico {
 	private Long id;
 	private String titulo;
 	private String mensagem;
-	private LocalDateTime dataCriacao = now();
+	private final LocalDateTime dataCriacao = now();
 	@Enumerated(STRING)
 	private StatusTopico status = NAO_RESPONDIDO;
 	@ManyToOne
@@ -25,7 +25,7 @@ public class Topico {
 	@ManyToOne
 	private Curso curso;
 	@OneToMany(mappedBy = "topico")
-	private List<Resposta> respostas = new ArrayList<>();
+	private final List<Resposta> respostas = new ArrayList<>();
 
 	public Topico() {
 	}
@@ -64,10 +64,6 @@ public class Topico {
 		return dataCriacao;
 	}
 
-	public void setDataCriacao(LocalDateTime dataCriacao) {
-		this.dataCriacao = dataCriacao;
-	}
-
 	public StatusTopico getStatus() {
 		return status;
 	}
@@ -94,10 +90,6 @@ public class Topico {
 
 	public List<Resposta> getRespostas() {
 		return respostas;
-	}
-
-	public void setRespostas(List<Resposta> respostas) {
-		this.respostas = respostas;
 	}
 
 	@Override
