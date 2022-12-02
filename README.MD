@@ -72,7 +72,7 @@ mvn clean package
 E execute o comando abaixo para executar o projeto: (:warning: atenção o projeto utiliza a porta 8080)
 
 ```
-java -jar ./target/forum.jar --spring.profiles.active=prod
+java -jar ./target/forum.jar 
 ```
 
 ## Como utilizar:
@@ -138,3 +138,8 @@ Para realizar a remoção de tópicos é necessario ter a ROLE de MODERADOR, cas
 | [<img src="https://avatars.githubusercontent.com/u/102674195?v=4" width=115><br><sub>Juliano Machado</sub>](https://github.com/julianomachadoo) |
 |:-----------------------------------------------------------------------------------------------------------------------------------------------:|
 
+## Licença
+
+The [MIT License](https://github.com/julianomachadoo/forum/blob/main/LICENSE) (MIT)
+
+Copyright :copyright: 2022 - Forum API
