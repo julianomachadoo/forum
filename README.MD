@@ -10,6 +10,8 @@
 
 > Status do Projeto: :heavy_check_mark: (Em desenvolvimento)
 
+...
+
 ### Tópicos
 
 :small_blue_diamond: [Descrição do projeto](#descrição-do-projeto)
@@ -44,7 +46,9 @@
 
 ## Layout da Aplicação :dash:
 
-[//]: # (endpoints.png)
+![](https://raw.githubusercontent.com/julianomachadoo/forum/main/img/endpoints.png)
+
+...
 
 ## Pré-requisitos
 
@@ -60,7 +64,7 @@ ou [Eclipse](https://www.eclipse.org/downloads/)
 No terminal, clone o projeto:
 
 ```
-git clone https://github.com/julianomachadoo/certificate-generator
+git clone https://github.com/julianomachadoo/forum.git
 ```
 
 Com o projeto baixado, execute o seguinte comando para criar o jar:
@@ -75,31 +79,37 @@ E execute o comando abaixo para executar o projeto: (:warning: atenção o proje
 java -jar ./target/forum.jar 
 ```
 
+...
+
 ## Como utilizar:
 
 <p align="justify">
 Em ambiente de produção, estão liberados publicamente apenas o acesso aos endpoints de listagem e detalhamento dos tópicos:
 </p>
 
-[//]: # (getTopicos.gif e getTopicosById.gif)
+![](https://github.com/julianomachadoo/forum/blob/main/img/getTopicos.gif?raw=true)
+![](https://github.com/julianomachadoo/forum/blob/main/img/getTopicosById.gif?raw=true)
 
 <p align="justify">
 Para o acesso aos outros endpoints, é necessario realizar a autenticação. Passando o email e a senha listados no tópico 
 abaixo é possível obter o token JWT de autenticação: </p>
 
-[//]: # (autenticandoAluno.gif)
+![](https://github.com/julianomachadoo/forum/blob/main/img/autenticandoAluno.gif?raw=true)
 
 <p align="justify">
 O token é valido por 24h e deve ser passado no header Authorization juntamente com o nome Bearer que representa o formato da autenticação:
 </p>
 
-[//]: # (postExemplo.gif)
+![](https://github.com/julianomachadoo/forum/blob/main/img/postExemplo.gif?raw=true)
 
 <p align="justify">
 Para realizar a remoção de tópicos é necessario ter a ROLE de MODERADOR, caso contrário, o código recebido será o <font color=\"green\">403 Forbidden</font>:  
 </p>
 
 [//]: # (deleteNaoAutorizado)
+![](https://github.com/julianomachadoo/forum/blob/main/img/deleteNaoAutorizado.gif?raw=true)
+
+...
 
 ## JSON :floppy_disk:
 
@@ -130,6 +140,7 @@ Para realizar a remoção de tópicos é necessario ter a ROLE de MODERADOR, cas
 
 :memo: Melhorar a cobertura de testes
 
+...
 
 ## Desenvolvedores/Contribuintes :octocat:
 
