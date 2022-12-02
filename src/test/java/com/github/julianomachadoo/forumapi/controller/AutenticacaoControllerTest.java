@@ -15,7 +15,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles("prod")
 class AutenticacaoControllerTest {
 
     @Autowired
@@ -35,6 +35,30 @@ class AutenticacaoControllerTest {
                         .is(400)
                 );
 
+    }
+
+    @Test
+    public void deveriaDevolverUmBearerTokenCasoAutenticacaoAcontecaComSucesso() throws Exception {
+
+        URI uri = new URI("/auth");
+        String json = "{\"email\":\"aluno@email.com\", \"senha\":\"123456\"}";
+        String jsonModerador = "{\"email\":\"moderador@email.com\", \"senha\":\"123456\"}";
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uri)
+                        .content(json)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers
+                        .status().is(200)
+                );
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uri)
+                        .content(jsonModerador)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers
+                        .status().is(200)
+                );
     }
 
 }

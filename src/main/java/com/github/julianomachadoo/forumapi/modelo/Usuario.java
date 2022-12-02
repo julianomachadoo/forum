@@ -23,6 +23,9 @@ public class Usuario implements UserDetails {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private final List<Perfil> perfis = new ArrayList<>();
 
+	public Usuario() {
+	}
+
 	public Usuario(String nome, String email, String senha) {
 		this.nome = nome;
 		this.email = email;
