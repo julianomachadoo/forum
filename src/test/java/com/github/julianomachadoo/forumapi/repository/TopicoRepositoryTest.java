@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,7 +42,6 @@ class TopicoRepositoryTest {
         Topico t1 = new Topico(T1_TITULO, T1_MENSAGEM, spring);
         Topico t2 = new Topico(T2_TITULO, T2_MENSAGEM, spring);
         Topico t3 = new Topico(T3_TITULO, T3_MENSAGEM, spring);
-        LocalDateTime data = LocalDateTime.now();
         PageRequest pageRequest = PageRequest.of(0, 10);
 
         em.persist(spring);
@@ -60,19 +58,16 @@ class TopicoRepositoryTest {
         assertEquals(CURSO_CATEGORIA, listaTopicos.get(0).getCurso().getCategoria());
         assertEquals(T1_TITULO, listaTopicos.get(0).getTitulo());
         assertEquals(T1_MENSAGEM, listaTopicos.get(0).getMensagem());
-        assertEquals(data, listaTopicos.get(0).getDataCriacao());
 
         assertEquals(CURSO_NOME, listaTopicos.get(1).getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, listaTopicos.get(1).getCurso().getCategoria());
         assertEquals(T2_TITULO, listaTopicos.get(1).getTitulo());
         assertEquals(T2_MENSAGEM, listaTopicos.get(1).getMensagem());
-        assertEquals(data, listaTopicos.get(1).getDataCriacao());
 
         assertEquals(CURSO_NOME, listaTopicos.get(2).getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, listaTopicos.get(2).getCurso().getCategoria());
         assertEquals(T3_TITULO, listaTopicos.get(2).getTitulo());
         assertEquals(T3_MENSAGEM, listaTopicos.get(2).getMensagem());
-        assertEquals(data, listaTopicos.get(2).getDataCriacao());
     }
 
     @Test

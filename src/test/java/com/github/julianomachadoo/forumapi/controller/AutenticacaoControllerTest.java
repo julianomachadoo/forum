@@ -41,12 +41,12 @@ class AutenticacaoControllerTest {
     public void deveriaDevolverUmBearerTokenCasoAutenticacaoAcontecaComSucesso() throws Exception {
 
         URI uri = new URI("/auth");
-        String json = "{\"email\":\"aluno@email.com\", \"senha\":\"123456\"}";
+        String jsonAluno = "{\"email\":\"aluno@email.com\", \"senha\":\"123456\"}";
         String jsonModerador = "{\"email\":\"moderador@email.com\", \"senha\":\"123456\"}";
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(uri)
-                        .content(json)
+                        .content(jsonAluno)
                         .contentType(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers
                         .status().is(200)
