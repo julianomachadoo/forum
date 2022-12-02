@@ -7,6 +7,7 @@ import com.github.julianomachadoo.forumapi.controller.form.TopicoForm;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 import com.github.julianomachadoo.forumapi.repository.CursoRepository;
 import com.github.julianomachadoo.forumapi.repository.TopicoRepository;
+import com.github.julianomachadoo.forumapi.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,6 +33,14 @@ public class TopicosController {
     @Autowired
     CursoRepository cursoRepository;
 
+    @Autowired
+    UsuarioRepository usuarioRepository;
+
+    public TopicosController(TopicoRepository topicoRepository, CursoRepository cursoRepository, UsuarioRepository usuarioRepository) {
+        this.topicoRepository = topicoRepository;
+        this.cursoRepository = cursoRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
 
     @GetMapping
     @Cacheable(value = "listaDeTopicos")

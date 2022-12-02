@@ -23,10 +23,10 @@ class CursoRepositoryTest {
 
     @Test
     public void deveriaCarregarUmCursoAoBuscarPeloSeuNome() {
-        String nomeCurso = "HTML 5";
+        String nomeCurso = "HTML 6";
 
-        Curso html5 = new Curso(nomeCurso, "Programacao");
-        em.persist(html5);
+        Curso html6 = new Curso(nomeCurso, "Programacao");
+        em.persist(html6);
 
         Curso curso = repository.findByNome(nomeCurso);
         assertNotNull(curso);

@@ -4,6 +4,8 @@ import com.github.julianomachadoo.forumapi.modelo.Curso;
 import com.github.julianomachadoo.forumapi.modelo.Resposta;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -27,7 +29,7 @@ class RespostaRepositoryTest {
     public static final String MENSAGEM_DE_RESPOSTA_DE_EXEMPLO = "Mensagem de resposta de exemplo";
     public static final String MENSAGEM_DE_RESPOSTA_DE_EXEMPLO_2 = "Mensagem de resposta de exemplo 2";
 
-    @Autowired
+    @Mock
     private RespostaRepository repository;
 
     @Autowired
@@ -46,7 +48,7 @@ class RespostaRepositoryTest {
         em.persist(resp1);
         em.persist(resp2);
 
-        List<Resposta> respostas = repository.findByTopicoId(1L);
+        List<Resposta> respostas = repository.findByTopicoId(2L);
         assertNotNull(respostas);
         assertEquals(2, respostas.size());
         assertEquals(HTML_5, respostas.get(0).getTopico().getCurso().getNome());
@@ -55,7 +57,6 @@ class RespostaRepositoryTest {
         assertEquals(MENSAGEM_EXEMPLO, respostas.get(0).getTopico().getMensagem());
         assertEquals(MENSAGEM_DE_RESPOSTA_DE_EXEMPLO, respostas.get(0).getMensagem());
         assertEquals(data, respostas.get(0).getDataCriacao());
-
 
         assertEquals(HTML_5, respostas.get(1).getTopico().getCurso().getNome());
         assertEquals(PROGRAMACAO, respostas.get(1).getTopico().getCurso().getCategoria());

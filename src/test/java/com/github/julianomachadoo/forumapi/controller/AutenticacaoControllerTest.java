@@ -15,7 +15,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("prod")
+@ActiveProfiles("test")
 class AutenticacaoControllerTest {
 
     @Autowired

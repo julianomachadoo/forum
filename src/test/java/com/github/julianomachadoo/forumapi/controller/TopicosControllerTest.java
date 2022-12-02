@@ -1,10 +1,23 @@
 package com.github.julianomachadoo.forumapi.controller;
 
+import com.github.julianomachadoo.forumapi.modelo.Curso;
+import com.github.julianomachadoo.forumapi.modelo.Topico;
+import com.github.julianomachadoo.forumapi.modelo.Usuario;
+import com.github.julianomachadoo.forumapi.repository.TopicoRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -12,47 +25,152 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("prod")
-class TopicosControllerProdTest {
+@ActiveProfiles("test")
+class TopicosControllerAuthTest {
 
     @Autowired
     MockMvc mockMvc;
 
+    @MockBean
+    TopicoRepository topicoRepository;
+
+    private final Topico topico = new Topico("Titulo", "Mensagem", new Usuario(), new Curso());
+    private final URI uriTopicos = new URI("/topicos");
+    private final URI uriTopicosUm = new URI("/topicos/1");
+    private final URI uriAuth = new URI("/auth");
+    private final String jsonTopico = "{\"mensagem\":\"mensagem de teste\", " +
+            "\"nomeCurso\":\"Spring Boot\", " +
+            "\"titulo\":\"titulo de teste\"}";
+    private final String jsonAluno = "{\"email\":\"aluno@email.com\", \"senha\":\"123456\"}";
+    private final String jsonModerador = "{\"email\":\"moderador@email.com\", \"senha\":\"123456\"}";
+
+    TopicosControllerAuthTest() throws URISyntaxException {
+    }
+
+    @BeforeEach
+    public void iniciar() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
     public void deveriaPermitirListarTopicosPublicamente() throws Exception {
-        URI uri = new URI("/topicos");
+        Page<Topico> pageTopicos = new Page<>() {
+            @Override
+            public int getTotalPages() {
+                return 0;
+            }
+
+            @Override
+            public long getTotalElements() {
+                return 0;
+            }
+
+            @Override
+            public <U> Page<U> map(Function<? super Topico, ? extends U> converter) {
+                return null;
+            }
+
+            @Override
+            public int getNumber() {
+                return 0;
+            }
+
+            @Override
+            public int getSize() {
+                return 0;
+            }
+
+            @Override
+            public int getNumberOfElements() {
+                return 0;
+            }
+
+            @Override
+            public List<Topico> getContent() {
+                return null;
+            }
+
+            @Override
+            public boolean hasContent() {
+                return false;
+            }
+
+            @Override
+            public Sort getSort() {
+                return null;
+            }
+
+            @Override
+            public boolean isFirst() {
+                return false;
+            }
+
+            @Override
+            public boolean isLast() {
+                return false;
+            }
+
+            @Override
+            public boolean hasNext() {
+                return false;
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return false;
+            }
+
+            @Override
+            public Pageable nextPageable() {
+                return null;
+            }
+
+            @Override
+            public Pageable previousPageable() {
+                return null;
+            }
+
+            @Override
+            public Iterator<Topico> iterator() {
+                return null;
+            }
+        };
+
+        Mockito.when(topicoRepository.findAll(PageRequest.of(0, 10))).thenReturn(pageTopicos);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get(uri))
+                        .get(uriTopicos))
                 .andExpect(MockMvcResultMatchers
                         .status().isOk());
     }
 
     @Test
     public void deveriaPermitirDetalharTopicosPublicamente() throws Exception {
-        URI uri = new URI("/topicos/2");
+        Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get(uri))
+                        .get(uriTopicosUm))
                 .andExpect(MockMvcResultMatchers
                         .status().isOk());
     }
 
     @Test
     public void naoDeveriaPermitirUmPostNaoAutenticado() throws Exception  {
-        URI uri = new URI("/topicos");
-        String json = "{\"mensagem\":\"mensagem de teste\", " +
-                "\"nomeCurso\":\"Spring Boot\", " +
-                "\"titulo\":\"titulo de teste\"}";
+        Mockito.when(topicoRepository.save(ArgumentMatchers.any(Topico.class))).thenReturn(topico);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .post(uri)
-                        .content(json)
+                        .post(uriTopicos)
+                        .content(jsonTopico)
                         .contentType(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers
                         .status().isForbidden());
@@ -60,44 +178,26 @@ class TopicosControllerProdTest {
 
     @Test
     public void deveriaPermitirUmPostAutenticado() throws Exception  {
-        URI uri = new URI("/auth");
-        String jsonAluno = "{\"email\":\"aluno@email.com\", \"senha\":\"123456\"}";
+        String token = authToken(jsonAluno);
 
-        URI uriPost = new URI("/topicos");
-        String jsonPost = "{\"mensagem\":\"mensagem de teste\", " +
-                "\"nomeCurso\":\"Spring Boot\", " +
-                "\"titulo\":\"titulo de teste\"}";
-
-        MockHttpServletResponse responseAluno = mockMvc.perform(MockMvcRequestBuilders
-                .post(uri)
-                .content(jsonAluno)
-                .contentType(APPLICATION_JSON)).andReturn().getResponse();
-
-        String contentAsString = responseAluno.getContentAsString();
-        String token = contentAsString.substring(10, 177);
-        String tipoToken = contentAsString.substring(187, 193);
-
-        Assertions.assertEquals("Bearer", tipoToken);
+        Mockito.when(topicoRepository.save(ArgumentMatchers.any(Topico.class))).thenReturn(topico);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post(uriPost)
-                .content(jsonPost)
+                .post(uriTopicos)
+                .content(jsonTopico)
                 .contentType(APPLICATION_JSON)
-                .header("authorization", tipoToken + " " + token))
+                .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
-
     @Test
     public void naoDeveriaPermitirUmPutNaoAutenticado() throws Exception  {
-        URI uri = new URI("/topicos/1");
-        String json = "{\"mensagem\":\"mensagem de teste\", " +
-                "\"nomeCurso\":\"Spring Boot\", " +
-                "\"titulo\":\"titulo de teste\"}";
+        Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
+        Mockito.when(topicoRepository.getReferenceById(ArgumentMatchers.anyLong())).thenReturn(topico);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put(uri)
-                        .content(json)
+                        .put(uriTopicosUm)
+                        .content(jsonTopico)
                         .contentType(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers
                         .status().isForbidden());
@@ -105,77 +205,60 @@ class TopicosControllerProdTest {
 
     @Test
     public void deveriaPermitirUmPutAutenticado() throws Exception  {
-        URI uri = new URI("/auth");
-        String jsonAluno = "{\"email\":\"aluno@email.com\", \"senha\":\"123456\"}";
+        String token = authToken(jsonAluno);
 
-        URI uriPost = new URI("/topicos/1");
-        String jsonPost = "{\"mensagem\":\"mensagem de teste\", " +
-                "\"nomeCurso\":\"Spring Boot\", " +
-                "\"titulo\":\"titulo de teste\"}";
-
-        MockHttpServletResponse responseAluno = mockMvc.perform(MockMvcRequestBuilders
-                .post(uri)
-                .content(jsonAluno)
-                .contentType(APPLICATION_JSON)).andReturn().getResponse();
-
-        String contentAsString = responseAluno.getContentAsString();
-        String token = contentAsString.substring(10, 177);
-        String tipoToken = contentAsString.substring(187, 193);
-
-        Assertions.assertEquals("Bearer", tipoToken);
+        Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
+        Mockito.when(topicoRepository.getReferenceById(ArgumentMatchers.anyLong())).thenReturn(topico);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put(uriPost)
-                        .content(jsonPost)
+                        .put(uriTopicosUm)
+                        .content(jsonTopico)
                         .contentType(APPLICATION_JSON)
-                        .header("authorization", tipoToken + " " + token))
+                        .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     public void naoDeveriaPermitirUmDeleteNaoAutenticado() throws Exception  {
-        URI uri = new URI("/topicos/1");
+       Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
+        Mockito.doNothing().when(topicoRepository).deleteById(ArgumentMatchers.anyLong());
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete(uri))
+                        .delete(uriTopicosUm))
                 .andExpect(MockMvcResultMatchers
                         .status().isForbidden());
     }
 
     @Test
     public void naoDeveriaPermitirUmDeletePorAluno() throws Exception  {
-        URI uri = new URI("/auth");
-        String jsonAluno = "{\"email\":\"aluno@email.com\", \"senha\":\"123456\"}";
+        String token = authToken(jsonAluno);
 
-        URI uriPost = new URI("/topicos/1");
-
-        MockHttpServletResponse responseAluno = mockMvc.perform(MockMvcRequestBuilders
-                .post(uri)
-                .content(jsonAluno)
-                .contentType(APPLICATION_JSON)).andReturn().getResponse();
-
-        String contentAsString = responseAluno.getContentAsString();
-        String token = contentAsString.substring(10, 177);
-        String tipoToken = contentAsString.substring(187, 193);
-
-        Assertions.assertEquals("Bearer", tipoToken);
+        Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
+        Mockito.doNothing().when(topicoRepository).deleteById(ArgumentMatchers.anyLong());
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete(uriPost)
-                        .header("authorization", tipoToken + " " + token))
+                        .delete(uriTopicosUm)
+                        .header("authorization", token))
                     .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     public void deveriaPermitirUmDeletePorModerador() throws Exception  {
-        URI uri = new URI("/auth");
-        String jsonAluno = "{\"email\":\"moderador@email.com\", \"senha\":\"123456\"}";
+        String token = authToken(jsonModerador);
 
-        URI uriPost = new URI("/topicos/1");
+        Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
+        Mockito.doNothing().when(topicoRepository).deleteById(ArgumentMatchers.anyLong());
 
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete(uriTopicosUm)
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    private String authToken(String json) throws Exception {
         MockHttpServletResponse responseAluno = mockMvc.perform(MockMvcRequestBuilders
-                .post(uri)
-                .content(jsonAluno)
+                .post(uriAuth)
+                .content(json)
                 .contentType(APPLICATION_JSON)).andReturn().getResponse();
 
         String contentAsString = responseAluno.getContentAsString();
@@ -183,17 +266,13 @@ class TopicosControllerProdTest {
         String tipoToken = contentAsString.substring(187, 193);
 
         Assertions.assertEquals("Bearer", tipoToken);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete(uriPost)
-                        .header("authorization", tipoToken + " " + token))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        return tipoToken + " " + token;
     }
 }
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
-class TopicosControllerTest {
+@ActiveProfiles("dev")
+class TopicosControllerDevTest {
 }
 
