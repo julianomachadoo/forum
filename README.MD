@@ -42,9 +42,15 @@
 
 :ballot_box_with_check: Autorização baseada em sistema de ROLES;
 
+:ballot_box_with_check: Deploy em um servidor de núvem;
+
 ...
 
-## Layout da Aplicação :dash:
+## Layout/Deploy da Aplicação :dash:
+
+> Link do deploy da aplicação: http://forumapi-env.eba-ksb5s6f6.us-east-1.elasticbeanstalk.com/swagger-ui.html
+
+...
 
 ![](https://raw.githubusercontent.com/julianomachadoo/forum/main/img/endpoints.png)
 
@@ -53,7 +59,7 @@
 ## Pré-requisitos
 
 :warning: [Java Runtime Environment](https://www.java.com/pt-BR/download/) <br>
-:warning: [Maven](https://maven.apache.org/download.cgi) <br>
+:warning: [Maven](https://maven.apache.org/download.cgi) <br> 
 :warning: <b>Opcional:</b> [IntelliJ IDEA](https://www.jetbrains.com/idea/download/#section=windows)
 ou [Eclipse](https://www.eclipse.org/downloads/)
 
@@ -73,7 +79,7 @@ Com o projeto baixado, execute o seguinte comando para criar o jar:
 mvn clean package
 ```
 
-E execute o comando abaixo para executar o projeto: (:warning: atenção o projeto utiliza a porta 8080)
+E execute o comando abaixo para executar o projeto: (:warning: atenção o projeto utiliza a porta 5000)
 
 ```
 java -jar ./target/forum.jar 
