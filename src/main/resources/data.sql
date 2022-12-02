@@ -1,11 +1,15 @@
-INSERT INTO USUARIO(nome, email, senha) VALUES('Aluno', 'aluno@email.com', '$2a$12$LlhPKmjH3X4.ShoEgolDzea23WHA68P0mfDGjMHC9tgG99SNRsdzy');
 INSERT INTO USUARIO(nome, email, senha) VALUES('Moderador', 'moderador@email.com', '$2a$12$LlhPKmjH3X4.ShoEgolDzea23WHA68P0mfDGjMHC9tgG99SNRsdzy');
+INSERT INTO USUARIO(nome, email, senha) VALUES('Aluno', 'aluno@email.com', '$2a$12$LlhPKmjH3X4.ShoEgolDzea23WHA68P0mfDGjMHC9tgG99SNRsdzy');
+INSERT INTO USUARIO(nome, email, senha) VALUES('Aluno2', 'aluno2@email.com', '$2a$12$LlhPKmjH3X4.ShoEgolDzea23WHA68P0mfDGjMHC9tgG99SNRsdzy');
 
-INSERT INTO PERFIL(id, nome) VALUES(1, 'ROLE_ALUNO');
-INSERT INTO PERFIL(id, nome) VALUES(2, 'ROLE_MODERADOR');
+INSERT INTO PERFIL(id, nome) VALUES(1, 'ROLE_MODERADOR');
+INSERT INTO PERFIL(id, nome) VALUES(2, 'ROLE_ALUNO');
+INSERT INTO PERFIL(id, nome) VALUES(3, 'ROLE_ALUNO');
+
 
 INSERT INTO USUARIO_PERFIS(usuario_id, perfis_id) VALUES(1, 1);
 INSERT INTO USUARIO_PERFIS(usuario_id, perfis_id) VALUES(2, 2);
+INSERT INTO USUARIO_PERFIS(usuario_id, perfis_id) VALUES(3, 3);
 
 
 INSERT INTO CURSO(nome, categoria) VALUES('Spring Boot', 'Programação');

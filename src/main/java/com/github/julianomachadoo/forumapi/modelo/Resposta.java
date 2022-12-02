@@ -23,6 +23,14 @@ public class Resposta {
 	private Usuario autor;
 	private Boolean solucao = false;
 
+	public Resposta() {
+	}
+
+	public Resposta(String mensagem, Topico topico) {
+		this.mensagem = mensagem;
+		this.topico = topico;
+	}
+
 	public Long getId() {
 		return id;
 	}
