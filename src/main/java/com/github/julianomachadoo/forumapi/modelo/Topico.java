@@ -43,6 +43,14 @@ public class Topico {
 		this.curso = curso;
 	}
 
+	public Topico(String titulo, String mensagem, StatusTopico status, Usuario autor, Curso curso) {
+		this.titulo = titulo;
+		this.mensagem = mensagem;
+		this.status = status;
+		this.autor = autor;
+		this.curso = curso;
+	}
+
 	public Long getId() {
 		return id;
 	}
