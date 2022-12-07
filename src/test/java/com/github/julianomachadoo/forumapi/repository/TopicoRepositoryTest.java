@@ -25,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
 class TopicoRepositoryTest {
+
+    // TODO: teste encontrar topicos por autor
     @Autowired
     private TopicoRepository topicoRepository;
     @Autowired
@@ -32,8 +34,8 @@ class TopicoRepositoryTest {
     @Autowired
     private TestEntityManager em;
 
-    public static final String MENSAGEM_ATUALIZADA = "Mensagem atualizada";
-    public static final String TITULO_ATUALIZADO = "Titulo atualizado";
+    private static final String MENSAGEM_ATUALIZADA = "Mensagem atualizada";
+    private static final String TITULO_ATUALIZADO = "Titulo atualizado";
     private static final String CURSO_NOME = "Spring Boot";
     private static final String CURSO_CATEGORIA = "Programação";
     private static final String TITULO1 = "Dúvida";

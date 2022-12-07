@@ -25,8 +25,8 @@ class CursoRepositoryTest {
     @Autowired
     private TestEntityManager em;
 
-    public static final String NOVA_CATEGORIA = "nova categoria";
-    public static final String NOME_ATUALIZADO = "Nome atualizado";
+    private static final String NOVA_CATEGORIA = "nova categoria";
+    private static final String NOME_ATUALIZADO = "Nome atualizado";
     private static final String CURSO_NOME_SPRING = "Spring Boot";
     private static final String CURSO_CATEGORIA_SPRING = "Programação";
     private static final String CURSO_NOME_HTML5 = "HTML 5";
