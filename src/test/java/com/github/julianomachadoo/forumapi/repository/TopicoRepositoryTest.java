@@ -2,7 +2,9 @@ package com.github.julianomachadoo.forumapi.repository;
 
 import com.github.julianomachadoo.forumapi.modelo.Curso;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
+import com.github.julianomachadoo.forumapi.modelo.Usuario;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -26,11 +28,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 class TopicoRepositoryTest {
 
-    // TODO: teste encontrar topicos por autor
     @Autowired
     private TopicoRepository topicoRepository;
     @Autowired
     private CursoRepository cursoRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     @Autowired
     private TestEntityManager em;
 
@@ -40,24 +43,32 @@ class TopicoRepositoryTest {
     private static final String CURSO_CATEGORIA = "Programação";
     private static final String TITULO1 = "Dúvida";
     private static final String TITULO2 = "Dúvida2";
-    private static final String TITULO3 = "Dúvida3";
     private static final String MENSAGEM1 = "Erro ao criar projeto";
     private static final String MENSAGEM2 = "Projeto não compila";
-    private static final String MENSAGEM3 = "Projeto não compila de jeito nenhum";
+    private static final String NOME_DE_USUARIO_DE_EXEMPLO = "Nome de usuario de exemplo";
+    private static final String EMAIL_DE_EXEMPLO = "exemplo1@email.com";
+    private static final String SENHA_DE_EXEMPLO_1 = "senhaDeExemplo1";
+    private final Usuario usuario1 = new Usuario(NOME_DE_USUARIO_DE_EXEMPLO, EMAIL_DE_EXEMPLO, SENHA_DE_EXEMPLO_1);
     private final Curso spring = new Curso(CURSO_NOME, CURSO_CATEGORIA);
-    private final Topico t1 = new Topico(TITULO1, MENSAGEM1, spring);
-    private final Topico t2 = new Topico(TITULO2, MENSAGEM2, spring);
-    private final Topico t3 = new Topico(TITULO3, MENSAGEM3, spring);
+    private final Topico t1 = new Topico(TITULO1, MENSAGEM1, usuario1, spring);
+    private final Topico t2 = new Topico(TITULO2, MENSAGEM2, usuario1, spring);
+
+    @BeforeEach
+    public void inicializar() {
+        em.persist(usuario1);
+        em.persist(spring);
+    }
 
     @Test
     public void deveriaSalvarUmTopico() {
-        Topico topico = topicoRepository.save(new Topico(TITULO1, MENSAGEM1, new Curso(CURSO_NOME, CURSO_CATEGORIA)));
+        Topico topico = topicoRepository.save(t1);
 
         assertNotNull(topico);
         assertEquals(TITULO1, topico.getTitulo());
         assertEquals(MENSAGEM1, topico.getMensagem());
         assertEquals(CURSO_NOME, topico.getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, topico.getCurso().getCategoria());
+        assertEquals(usuario1, topico.getAutor());
     }
 
     @Test
@@ -69,16 +80,17 @@ class TopicoRepositoryTest {
         assertEquals(MENSAGEM1, topicos.get(0).getMensagem());
         assertEquals(CURSO_NOME, topicos.get(0).getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, topicos.get(0).getCurso().getCategoria());
+        assertEquals(usuario1, topicos.get(0).getAutor());
 
         assertEquals(TITULO2, topicos.get(1).getTitulo());
         assertEquals(MENSAGEM2, topicos.get(1).getMensagem());
         assertEquals(CURSO_NOME, topicos.get(1).getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, topicos.get(1).getCurso().getCategoria());
+        assertEquals(usuario1, topicos.get(1).getAutor());
     }
 
     @Test
     public void deveriaCarregarUmaPaginacaoDeTopicos() {
-        em.persist(spring);
         em.persist(t1);
         em.persist(t2);
 
@@ -89,11 +101,13 @@ class TopicoRepositoryTest {
         assertEquals(MENSAGEM1, topicos.get().toList().get(0).getMensagem());
         assertEquals(CURSO_NOME, topicos.get().toList().get(0).getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, topicos.get().toList().get(0).getCurso().getCategoria());
+        assertEquals(usuario1, topicos.get().toList().get(0).getAutor());
 
         assertEquals(TITULO2, topicos.get().toList().get(1).getTitulo());
         assertEquals(MENSAGEM2, topicos.get().toList().get(1).getMensagem());
         assertEquals(CURSO_NOME, topicos.get().toList().get(1).getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, topicos.get().toList().get(1).getCurso().getCategoria());
+        assertEquals(usuario1, topicos.get().toList().get(1).getAutor());
     }
 
     @Test
@@ -106,30 +120,25 @@ class TopicoRepositoryTest {
 
     @Test
     public void deveriaCarregarUmaPaginacaoDeTopicosPorCursoNome() {
-        em.persist(spring);
         em.persist(t1);
         em.persist(t2);
-        em.persist(t3);
 
         Page<Topico> topicos = topicoRepository.findByCurso_Nome(CURSO_NOME, PageRequest.of(0, 10));
         List<Topico> listaTopicos = topicos.stream().toList();
 
         assertNotNull(topicos);
-        assertEquals(3, listaTopicos.size());
+        assertEquals(2, listaTopicos.size());
         assertEquals(CURSO_NOME, listaTopicos.get(0).getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, listaTopicos.get(0).getCurso().getCategoria());
         assertEquals(TITULO1, listaTopicos.get(0).getTitulo());
         assertEquals(MENSAGEM1, listaTopicos.get(0).getMensagem());
+        assertEquals(usuario1, listaTopicos.get(0).getAutor());
 
         assertEquals(CURSO_NOME, listaTopicos.get(1).getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, listaTopicos.get(1).getCurso().getCategoria());
         assertEquals(TITULO2, listaTopicos.get(1).getTitulo());
         assertEquals(MENSAGEM2, listaTopicos.get(1).getMensagem());
-
-        assertEquals(CURSO_NOME, listaTopicos.get(2).getCurso().getNome());
-        assertEquals(CURSO_CATEGORIA, listaTopicos.get(2).getCurso().getCategoria());
-        assertEquals(TITULO3, listaTopicos.get(2).getTitulo());
-        assertEquals(MENSAGEM3, listaTopicos.get(2).getMensagem());
+        assertEquals(usuario1, listaTopicos.get(1).getAutor());
     }
 
     @Test
@@ -144,7 +153,6 @@ class TopicoRepositoryTest {
 
     @Test
     public void deveriaEncontrarTopicoPorId() {
-        em.persist(spring);
         Topico topico1 = em.persist(t1);
 
         Optional<Topico> topico = topicoRepository.findById(topico1.getId());
@@ -157,6 +165,7 @@ class TopicoRepositoryTest {
         assertEquals(TITULO1, topico.get().getTitulo());
         assertEquals(CURSO_NOME, topico.get().getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, topico.get().getCurso().getCategoria());
+        assertEquals(usuario1, topico.get().getAutor());
     }
 
     @Test
@@ -165,12 +174,10 @@ class TopicoRepositoryTest {
 
         assertFalse(topico.isPresent());
         assertThat(topico).isEmpty();
-
     }
 
     @Test
     public void deveriaEncontrarReferenciaPorId() {
-        em.persist(spring);
         Topico topico1 = em.persist(t1);
 
         Topico topico = topicoRepository.getReferenceById(topico1.getId());
@@ -180,6 +187,7 @@ class TopicoRepositoryTest {
         assertEquals(MENSAGEM1, topico.getMensagem());
         assertEquals(CURSO_NOME, topico.getCurso().getNome());
         assertEquals(CURSO_CATEGORIA, topico.getCurso().getCategoria());
+        assertEquals(usuario1, topico.getAutor());
     }
 
     @Test
@@ -193,10 +201,9 @@ class TopicoRepositoryTest {
 
     @Test
     public void deveriaAtualizarUmTopico() {
-        em.persist(spring);
         Topico topicoPersist = em.persist(t1);
 
-        Topico topicoAtualizado = new Topico(TITULO_ATUALIZADO, MENSAGEM_ATUALIZADA, spring);
+        Topico topicoAtualizado = new Topico(TITULO_ATUALIZADO, MENSAGEM_ATUALIZADA,usuario1 , spring);
 
         Topico topico = topicoRepository.getReferenceById(topicoPersist.getId());
         topico.setTitulo(topicoAtualizado.getTitulo());
@@ -210,11 +217,11 @@ class TopicoRepositoryTest {
         assertNotNull(checagem.get());
         assertEquals(TITULO_ATUALIZADO, checagem.get().getTitulo());
         assertEquals(MENSAGEM_ATUALIZADA, checagem.get().getMensagem());
+        assertEquals(topicoAtualizado.getAutor(), checagem.get().getAutor());
     }
 
     @Test
     public void deveriaDeletarUmTopicoPorId() {
-        em.persist(spring);
         Topico persist = em.persist(t1);
         em.persist(t2);
 
@@ -233,5 +240,4 @@ class TopicoRepositoryTest {
             assertEquals(EmptyResultDataAccessException.class, e.getClass());
         }
     }
-
 }
