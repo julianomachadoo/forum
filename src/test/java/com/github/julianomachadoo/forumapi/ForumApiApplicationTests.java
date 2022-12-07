@@ -26,7 +26,7 @@ class ForumApiApplicationTests implements CommandLineRunner {
     private PerfilRepository perfilRepository;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Perfil perfilModerador = new Perfil("ROLE_MODERADOR");
         Perfil perfilAluno = new Perfil("ROLE_ALUNO");
 
@@ -36,18 +36,9 @@ class ForumApiApplicationTests implements CommandLineRunner {
         usuarioModerador.getPerfis().add(perfilModerador);
         usuarioAluno.getPerfis().add(perfilAluno);
 
-        Curso cursoSpring = new Curso("Spring Boot", "Programação");
-        Curso cursoHTML = new Curso("HTML 5", "Front-end");
-
-        Topico duvida = new Topico("Dúvida", "Erro ao criar projeto", StatusTopico.NAO_RESPONDIDO , usuarioAluno, cursoSpring);
-        Topico duvida2 = new Topico("Dúvida 2", "Projeto não compila", StatusTopico.NAO_RESPONDIDO , usuarioAluno, cursoSpring);
-        Topico duvida3 = new Topico("Dúvida3", "Tag HTML", StatusTopico.NAO_RESPONDIDO , usuarioAluno, cursoHTML);
-
         perfilRepository.saveAll(Arrays.asList(perfilModerador, perfilAluno));
         usuarioRepository.saveAll(Arrays.asList(usuarioModerador, usuarioAluno));
-        cursoRepository.saveAll(Arrays.asList(cursoSpring, cursoHTML));
-        topicoRepository.saveAll(Arrays.asList(duvida, duvida2, duvida3));
-       }
+    }
 }
 
 

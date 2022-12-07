@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,10 +23,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Iterator;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -52,7 +47,6 @@ class TopicosControllerAuthTest {
             "\"nomeCurso\":\"Spring Boot\", " +
             "\"titulo\":\"titulo de teste\"}";
     private final String jsonAluno = "{\"email\":\"aluno@email.com\", \"senha\":\"123456\"}";
-    private final String jsonModerador = "{\"email\":\"moderador@email.com\", \"senha\":\"123456\"}";
 
     TopicosControllerAuthTest() throws URISyntaxException {
     }
@@ -64,87 +58,7 @@ class TopicosControllerAuthTest {
 
     @Test
     public void deveriaPermitirListarTopicosPublicamente() throws Exception {
-        Page<Topico> pageTopicos = new Page<>() {
-            @Override
-            public int getTotalPages() {
-                return 0;
-            }
-
-            @Override
-            public long getTotalElements() {
-                return 0;
-            }
-
-            @Override
-            public <U> Page<U> map(Function<? super Topico, ? extends U> converter) {
-                return null;
-            }
-
-            @Override
-            public int getNumber() {
-                return 0;
-            }
-
-            @Override
-            public int getSize() {
-                return 0;
-            }
-
-            @Override
-            public int getNumberOfElements() {
-                return 0;
-            }
-
-            @Override
-            public List<Topico> getContent() {
-                return null;
-            }
-
-            @Override
-            public boolean hasContent() {
-                return false;
-            }
-
-            @Override
-            public Sort getSort() {
-                return null;
-            }
-
-            @Override
-            public boolean isFirst() {
-                return false;
-            }
-
-            @Override
-            public boolean isLast() {
-                return false;
-            }
-
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public boolean hasPrevious() {
-                return false;
-            }
-
-            @Override
-            public Pageable nextPageable() {
-                return null;
-            }
-
-            @Override
-            public Pageable previousPageable() {
-                return null;
-            }
-
-            @Override
-            public Iterator<Topico> iterator() {
-                return null;
-            }
-        };
+        PageImpl<Topico> pageTopicos = new PageImpl<>(new ArrayList<>());
 
         Mockito.when(topicoRepository.findAll(PageRequest.of(0, 10))).thenReturn(pageTopicos);
 
@@ -244,6 +158,7 @@ class TopicosControllerAuthTest {
 
     @Test
     public void deveriaPermitirUmDeletePorModerador() throws Exception  {
+        String jsonModerador = "{\"email\":\"moderador@email.com\", \"senha\":\"123456\"}";
         String token = authToken(jsonModerador);
 
         Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
