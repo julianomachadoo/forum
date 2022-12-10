@@ -31,6 +31,12 @@ public class Resposta {
 		this.topico = topico;
 	}
 
+	public Resposta(String mensagem, Topico topico, Usuario autor) {
+		this.mensagem = mensagem;
+		this.topico = topico;
+		this.autor = autor;
+	}
+
 	public Long getId() {
 		return id;
 	}
