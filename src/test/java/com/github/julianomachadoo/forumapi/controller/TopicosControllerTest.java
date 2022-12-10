@@ -31,7 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-class TopicosControllerAuthTest {
+class TopicosControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -48,7 +48,7 @@ class TopicosControllerAuthTest {
             "\"titulo\":\"titulo de teste\"}";
     private final String jsonAluno = "{\"email\":\"aluno@email.com\", \"senha\":\"123456\"}";
 
-    TopicosControllerAuthTest() throws URISyntaxException {
+    TopicosControllerTest() throws URISyntaxException {
     }
 
     @BeforeEach
@@ -79,7 +79,13 @@ class TopicosControllerAuthTest {
     }
 
     @Test
-    public void naoDeveriaPermitirUmPostNaoAutenticado() throws Exception  {
+    public void naoDeveriaDetalharUmTopicoNaoEncontrado() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/topicos/10"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void naoDeveriaPermitirUmPostNaoAutenticado() throws Exception {
         Mockito.when(topicoRepository.save(ArgumentMatchers.any(Topico.class))).thenReturn(topico);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -91,21 +97,94 @@ class TopicosControllerAuthTest {
     }
 
     @Test
-    public void deveriaPermitirUmPostAutenticado() throws Exception  {
+    public void deveriaPermitirUmPostAutenticado() throws Exception {
         String token = authToken(jsonAluno);
 
         Mockito.when(topicoRepository.save(ArgumentMatchers.any(Topico.class))).thenReturn(topico);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post(uriTopicos)
-                .content(jsonTopico)
-                .contentType(APPLICATION_JSON)
-                .header("authorization", token))
+                        .post(uriTopicos)
+                        .content(jsonTopico)
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @Test
-    public void naoDeveriaPermitirUmPutNaoAutenticado() throws Exception  {
+    public void naoDeveriaPermitirCadastrarComTituloVazio() throws Exception {
+        String token = authToken(jsonAluno);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uriTopicos)
+                        .content("{\"mensagem\":\"mensagem de teste\", " +
+                                "\"nomeCurso\":\"Spring Boot\", " +
+                                "\"titulo\":\"\"}")
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void naoDeveriaPermitirCadastrarComTituloPequeno() throws Exception {
+        String token = authToken(jsonAluno);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uriTopicos)
+                        .content("{\"mensagem\":\"mensagem de teste\", " +
+                                "\"nomeCurso\":\"Spring Boot\", " +
+                                "\"titulo\"titu\"\"}")
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void naoDeveriaPermitirCadastrarComMensagemVazia() throws Exception {
+        String token = authToken(jsonAluno);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uriTopicos)
+                        .content("{\"nomeCurso\":\"Spring Boot\", " +
+                                "\"titulo\"titulo de teste\"\"}")
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void naoDeveriaPermitirCadastrarComMensagemPequena() throws Exception {
+        String token = authToken(jsonAluno);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uriTopicos)
+                        .content("{\"mensagem\":\"mensagem \", " +
+                                "\"nomeCurso\":\"Spring Boot\", " +
+                                "\"titulo\"titulo de teste\"\"}")
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void naoDeveriaPermitirCadastrarSemONomeDoCurso() throws Exception {
+        String token = authToken(jsonAluno);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post(uriTopicos)
+                        .content("{\"mensagem\":\"mensagem de teste\", " +
+                                "\"titulo\"titulo de teste\"\"}")
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    // TODO: implementar essa lógica
+//    @Test
+//    public void naoDeveriaPermitirCadastrarComCursoInvalido() {}
+
+
+    @Test
+    public void naoDeveriaPermitirAtualizarNaoAutenticado() throws Exception {
         Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
         Mockito.when(topicoRepository.getReferenceById(ArgumentMatchers.anyLong())).thenReturn(topico);
 
@@ -118,7 +197,7 @@ class TopicosControllerAuthTest {
     }
 
     @Test
-    public void deveriaPermitirUmPutAutenticado() throws Exception  {
+    public void deveriaPermitirAtualizarAutenticado() throws Exception {
         String token = authToken(jsonAluno);
 
         Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
@@ -126,15 +205,68 @@ class TopicosControllerAuthTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(uriTopicosUm)
-                        .content(jsonTopico)
+                        .content("{\"mensagem\":\"mensagem de teste\", " +
+                                "\"titulo\"titulo de teste\"\"}")
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
-    public void naoDeveriaPermitirUmDeleteNaoAutenticado() throws Exception  {
-       Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
+    public void naoDeveriaPermitirAtualizarComTituloVazio() throws Exception {
+        String token = authToken(jsonAluno);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uriTopicosUm)
+                        .content("{\"mensagem\":\"mensagem de teste\", " +
+                                "\"titulo\"\"\"}")
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void naoDeveriaPermitirAtualizarComTituloPequeno() throws Exception {
+        String token = authToken(jsonAluno);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uriTopicosUm)
+                        .content("{\"mensagem\":\"mensagem de teste\", " +
+                                "\"titulo\"\"titu\"}")
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void naoDeveriaPermitirAtualizarComMensagemVazia() throws Exception {
+        String token = authToken(jsonAluno);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uriTopicosUm)
+                        .content("{\"mensagem\":\"\", " +
+                                "\"titulo\"\"\"}")
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void naoDeveriaPermitirAtualizarComMensagemPequena() throws Exception {
+        String token = authToken(jsonAluno);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put(uriTopicosUm)
+                        .content("{\"mensagem\":\"mensagem \", " +
+                                "\"titulo\"\"\"}")
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void naoDeveriaPermitirUmDeleteNaoAutenticado() throws Exception {
+        Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
         Mockito.doNothing().when(topicoRepository).deleteById(ArgumentMatchers.anyLong());
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -144,7 +276,7 @@ class TopicosControllerAuthTest {
     }
 
     @Test
-    public void naoDeveriaPermitirUmDeletePorAluno() throws Exception  {
+    public void naoDeveriaPermitirUmDeletePorAluno() throws Exception {
         String token = authToken(jsonAluno);
 
         Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
@@ -153,11 +285,11 @@ class TopicosControllerAuthTest {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete(uriTopicosUm)
                         .header("authorization", token))
-                    .andExpect(MockMvcResultMatchers.status().isForbidden());
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
-    public void deveriaPermitirUmDeletePorModerador() throws Exception  {
+    public void deveriaPermitirUmDeletePorModerador() throws Exception {
         String jsonModerador = "{\"email\":\"moderador@email.com\", \"senha\":\"123456\"}";
         String token = authToken(jsonModerador);
 
@@ -168,6 +300,17 @@ class TopicosControllerAuthTest {
                         .delete(uriTopicosUm)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void naoDeveriaRealizarUmDeleteEmVideoNaoCadastrado() throws Exception {
+        String jsonModerador = "{\"email\":\"moderador@email.com\", \"senha\":\"123456\"}";
+        String token = authToken(jsonModerador);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/topicos/10")
+                        .header("authorization", token))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     private String authToken(String json) throws Exception {
@@ -184,10 +327,3 @@ class TopicosControllerAuthTest {
         return tipoToken + " " + token;
     }
 }
-
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("dev")
-class TopicosControllerDevTest {
-}
-
