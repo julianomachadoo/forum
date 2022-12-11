@@ -1,4 +1,4 @@
-package com.github.julianomachadoo.forumapi.controller.form;
+package com.github.julianomachadoo.forumapi.rest.form;
 
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 import com.github.julianomachadoo.forumapi.repository.TopicoRepository;

@@ -1,9 +1,9 @@
 package com.github.julianomachadoo.forumapi.service;
 
-import com.github.julianomachadoo.forumapi.controller.dto.DetalhesDoTopicoDTO;
-import com.github.julianomachadoo.forumapi.controller.dto.TopicoDTO;
-import com.github.julianomachadoo.forumapi.controller.form.TopicoForm;
-import com.github.julianomachadoo.forumapi.exceptions.DadosInvalidosException;
+import com.github.julianomachadoo.forumapi.rest.dto.DetalhesDoTopicoDTO;
+import com.github.julianomachadoo.forumapi.rest.dto.TopicoDTO;
+import com.github.julianomachadoo.forumapi.rest.form.TopicoForm;
+import com.github.julianomachadoo.forumapi.exceptions.DadosNaoEncontrados;
 import com.github.julianomachadoo.forumapi.modelo.Curso;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 import com.github.julianomachadoo.forumapi.modelo.Usuario;
@@ -37,16 +37,29 @@ public class TopicoService {
         return new TopicoDTO(topicoSalvo);
     }
 
+
+    public TopicoDTO cadastrar(TopicoForm topicoForm, Usuario usuario) {
+        Topico topico = new Topico(
+                topicoForm.getTitulo(),
+                topicoForm.getMensagem(),
+                usuario,
+                obterCurso(topicoForm)
+        );
+
+        Topico topicoSalvo = topicoRepository.save(topico);
+        return new TopicoDTO(topicoSalvo);
+    }
+
     public DetalhesDoTopicoDTO detalharTopico(Long id) {
         Optional<Topico> optionalTopico = topicoRepository.findById(id);
-        if (optionalTopico.isEmpty()) throw new DadosInvalidosException("Topico nao encontrado");
+        if (optionalTopico.isEmpty()) throw new DadosNaoEncontrados("Topico nao encontrado");
         return new DetalhesDoTopicoDTO(optionalTopico.get());
     }
 
     private Curso obterCurso(TopicoForm topicoForm) {
         String nomeCurso = topicoForm.getNomeCurso();
         Optional<Curso> optionalCurso = cursoRepository.findByNome(nomeCurso);
-        if (optionalCurso.isEmpty()) throw new DadosInvalidosException("Curso nao encontrado");
+        if (optionalCurso.isEmpty()) throw new DadosNaoEncontrados("Curso nao encontrado");
         return optionalCurso.get();
     }
 
@@ -54,7 +67,8 @@ public class TopicoService {
         String emailUsuario = topicoForm.getEmailUsuario();
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(emailUsuario);
 
-        if (optionalUsuario.isEmpty()) throw new DadosInvalidosException("Usuario nao encontrado");
+        if (optionalUsuario.isEmpty()) throw new DadosNaoEncontrados("Usuario nao encontrado");
         return  optionalUsuario.get();
     }
+
 }

@@ -1,4 +1,4 @@
-package com.github.julianomachadoo.forumapi.controller.dto;
+package com.github.julianomachadoo.forumapi.rest.dto;
 
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 import org.springframework.data.domain.Page;

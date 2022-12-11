@@ -1,4 +1,4 @@
-package com.github.julianomachadoo.forumapi.controller.form;
+package com.github.julianomachadoo.forumapi.rest.form;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 

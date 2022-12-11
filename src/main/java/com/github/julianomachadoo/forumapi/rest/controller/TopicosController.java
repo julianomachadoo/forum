@@ -1,13 +1,15 @@
-package com.github.julianomachadoo.forumapi.controller;
+package com.github.julianomachadoo.forumapi.rest.controller;
 
-import com.github.julianomachadoo.forumapi.controller.dto.DetalhesDoTopicoDTO;
-import com.github.julianomachadoo.forumapi.controller.dto.TopicoDTO;
-import com.github.julianomachadoo.forumapi.controller.form.AtualizacaoTopicoForm;
-import com.github.julianomachadoo.forumapi.controller.form.TopicoForm;
+import com.github.julianomachadoo.forumapi.config.security.TokenService;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
+import com.github.julianomachadoo.forumapi.modelo.Usuario;
 import com.github.julianomachadoo.forumapi.repository.CursoRepository;
 import com.github.julianomachadoo.forumapi.repository.TopicoRepository;
 import com.github.julianomachadoo.forumapi.repository.UsuarioRepository;
+import com.github.julianomachadoo.forumapi.rest.dto.DetalhesDoTopicoDTO;
+import com.github.julianomachadoo.forumapi.rest.dto.TopicoDTO;
+import com.github.julianomachadoo.forumapi.rest.form.AtualizacaoTopicoForm;
+import com.github.julianomachadoo.forumapi.rest.form.TopicoForm;
 import com.github.julianomachadoo.forumapi.service.TopicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -36,7 +39,8 @@ public class TopicosController {
 
     @Autowired
     CursoRepository cursoRepository;
-
+    @Autowired
+    TokenService tokenService;
     @Autowired
     UsuarioRepository usuarioRepository;
     @Autowired
@@ -78,10 +82,10 @@ public class TopicosController {
             return ResponseEntity.created(uri).body(topicoDTO);
         }
 
-        Topico topico = topicoForm.converter(cursoRepository);
-        topicoRepository.save(topico);
-        URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
-        return ResponseEntity.created(uri).body(new TopicoDTO(topico));
+        Usuario user = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        TopicoDTO topicoDTO = topicoService.cadastrar(topicoForm, user);
+        URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topicoDTO.getId()).toUri();
+        return ResponseEntity.created(uri).body(topicoDTO);
     }
 
     @PutMapping("/{id}")

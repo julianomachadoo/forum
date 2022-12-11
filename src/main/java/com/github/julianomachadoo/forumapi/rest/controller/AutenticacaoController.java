@@ -1,8 +1,8 @@
-package com.github.julianomachadoo.forumapi.controller;
+package com.github.julianomachadoo.forumapi.rest.controller;
 
 import com.github.julianomachadoo.forumapi.config.security.TokenService;
-import com.github.julianomachadoo.forumapi.controller.dto.TokenDTO;
-import com.github.julianomachadoo.forumapi.controller.form.LoginForm;
+import com.github.julianomachadoo.forumapi.rest.dto.TokenDTO;
+import com.github.julianomachadoo.forumapi.rest.form.LoginForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;

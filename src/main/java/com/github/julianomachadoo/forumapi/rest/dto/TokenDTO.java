@@ -1,4 +1,4 @@
-package com.github.julianomachadoo.forumapi.controller.dto;
+package com.github.julianomachadoo.forumapi.rest.dto;
 
 public class TokenDTO {
 

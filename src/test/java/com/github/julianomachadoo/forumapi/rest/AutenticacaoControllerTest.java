@@ -1,4 +1,4 @@
-package com.github.julianomachadoo.forumapi.controller;
+package com.github.julianomachadoo.forumapi.rest;
 
 import com.github.julianomachadoo.forumapi.modelo.Perfil;
 import com.github.julianomachadoo.forumapi.modelo.Usuario;
