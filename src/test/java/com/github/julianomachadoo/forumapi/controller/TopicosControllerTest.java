@@ -4,6 +4,7 @@ import com.github.julianomachadoo.forumapi.modelo.Curso;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 import com.github.julianomachadoo.forumapi.modelo.Usuario;
 import com.github.julianomachadoo.forumapi.repository.TopicoRepository;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -104,7 +106,11 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(uriTopicos)
-                        .content(jsonTopico)
+                        .content(new JSONObject()
+                                .put("mensagem", "mensagem de teste")
+                                .put("nomeCurso", "Spring Boot")
+                                .put("titulo", "titulo de teste")
+                                .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -116,9 +122,11 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(uriTopicos)
-                        .content("{\"mensagem\":\"mensagem de teste\", " +
-                                "\"nomeCurso\":\"Spring Boot\", " +
-                                "\"titulo\":\"\"}")
+                        .content(new JSONObject()
+                                .put("mensagem", "mensagem de teste")
+                                .put("nomeCurso", "Spring Boot")
+                                .put("titulo", " ")
+                                .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -130,9 +138,11 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(uriTopicos)
-                        .content("{\"mensagem\":\"mensagem de teste\", " +
-                                "\"nomeCurso\":\"Spring Boot\", " +
-                                "\"titulo\"titu\"\"}")
+                        .content(new JSONObject()
+                                .put("mensagem", "mensagem de teste")
+                                .put("nomeCurso", "Spring Boot")
+                                .put("titulo", "titu")
+                                .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -144,8 +154,11 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(uriTopicos)
-                        .content("{\"nomeCurso\":\"Spring Boot\", " +
-                                "\"titulo\"titulo de teste\"\"}")
+                        .content(new JSONObject()
+                                .put("mensagem", "")
+                                .put("nomeCurso", "Spring Boot")
+                                .put("titulo", "titulo de teste")
+                                .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -157,9 +170,11 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(uriTopicos)
-                        .content("{\"mensagem\":\"mensagem \", " +
-                                "\"nomeCurso\":\"Spring Boot\", " +
-                                "\"titulo\"titulo de teste\"\"}")
+                        .content(new JSONObject()
+                                .put("mensagem", "mensagem")
+                                .put("nomeCurso", "Spring Boot")
+                                .put("titulo", "titulo de teste")
+                                .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -171,17 +186,14 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(uriTopicos)
-                        .content("{\"mensagem\":\"mensagem de teste\", " +
-                                "\"titulo\"titulo de teste\"\"}")
+                        .content(new JSONObject()
+                                .put("mensagem", "")
+                                .put("titulo", "titulo de teste")
+                                .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
-
-    // TODO: implementar essa lógica
-//    @Test
-//    public void naoDeveriaPermitirCadastrarComCursoInvalido() {}
-
 
     @Test
     public void naoDeveriaPermitirAtualizarNaoAutenticado() throws Exception {
@@ -205,11 +217,13 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(uriTopicosUm)
-                        .content("{\"mensagem\":\"mensagem de teste\", " +
-                                "\"titulo\"titulo de teste\"\"}")
+                        .content(new JSONObject()
+                                .put("mensagem", "mensagem de teste")
+                                .put("titulo", "titulo de teste")
+                                .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -218,8 +232,10 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(uriTopicosUm)
-                        .content("{\"mensagem\":\"mensagem de teste\", " +
-                                "\"titulo\"\"\"}")
+                        .content(new JSONObject()
+                                .put("mensagem", "mensagem de teste")
+                                .put("titulo", " ")
+                                .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -231,8 +247,10 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(uriTopicosUm)
-                        .content("{\"mensagem\":\"mensagem de teste\", " +
-                                "\"titulo\"\"titu\"}")
+                        .content(new JSONObject()
+                                .put("mensagem", "mensagem de teste")
+                                .put("titulo", "titu")
+                                .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -244,8 +262,9 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(uriTopicosUm)
-                        .content("{\"mensagem\":\"\", " +
-                                "\"titulo\"\"\"}")
+                        .content(new JSONObject()
+                                        .put("titulo", "titulo de teste")
+                                        .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -257,8 +276,10 @@ class TopicosControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(uriTopicosUm)
-                        .content("{\"mensagem\":\"mensagem \", " +
-                                "\"titulo\"\"\"}")
+                        .content(new JSONObject()
+                                .put("mensagem", "mensagem")
+                                .put("titulo", "titu")
+                                .toString())
                         .contentType(APPLICATION_JSON)
                         .header("authorization", token))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
