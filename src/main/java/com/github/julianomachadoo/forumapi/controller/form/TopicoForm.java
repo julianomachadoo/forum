@@ -6,6 +6,7 @@ import com.github.julianomachadoo.forumapi.repository.CursoRepository;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 public class TopicoForm {
 
@@ -16,6 +17,9 @@ public class TopicoForm {
     private String mensagem;
     @NotBlank
     private String nomeCurso;
+
+    private String emailUsuario;
+
 
     public String getTitulo() {
         return titulo;
@@ -41,8 +45,16 @@ public class TopicoForm {
         this.nomeCurso = nomeCurso;
     }
 
+    public String getEmailUsuario() {
+        return emailUsuario;
+    }
+
+    public void setEmailUsuario(String emailUsuario) {
+        this.emailUsuario = emailUsuario;
+    }
+
     public Topico converter(CursoRepository cursoRepository) {
-        Curso curso = cursoRepository.findByNome(this.nomeCurso);
-        return new Topico(this.titulo, this.mensagem, curso);
+        Optional<Curso> curso = cursoRepository.findByNome(this.nomeCurso);
+        return new Topico(this.titulo, this.mensagem, curso.get());
     }
 }

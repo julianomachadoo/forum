@@ -15,7 +15,7 @@ public class DetalhesDoTopicoDTO {
     private final LocalDateTime dataCriacao;
     private final String nomeAutor;
     private final StatusTopico status;
-    private List<RespostaDTO> respostas;
+    private final List<RespostaDTO> respostas;
 
     public DetalhesDoTopicoDTO(Topico topico) {
         this.id = topico.getId();
