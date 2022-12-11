@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -31,7 +33,7 @@ class CursoRepositoryTest {
                 .build();
         em.persist(spring);
 
-        Curso curso = repository.findByNome(CURSO_NOME_SPRING);
+        Curso curso = repository.findByNome(CURSO_NOME_SPRING).get();
         assertNotNull(curso);
         assertEquals(CURSO_NOME_SPRING, curso.getNome());
         assertEquals(CURSO_CATEGORIA_SPRING, curso.getCategoria());
@@ -40,7 +42,6 @@ class CursoRepositoryTest {
     @Test
     public void naoDeveriaCarregarUmCursoCujoNomeNaoEstejaCadastrado() {
         String nomeCurso = "JPA";
-        Curso curso = repository.findByNome(nomeCurso);
-        assertNull(curso);
+        assertThrows(NoSuchElementException.class, () ->repository.findByNome(nomeCurso).get());
     }
 }
