@@ -1,8 +1,9 @@
-package com.github.julianomachadoo.forumapi.controller;
+package com.github.julianomachadoo.forumapi.rest;
 
 import com.github.julianomachadoo.forumapi.modelo.Curso;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 import com.github.julianomachadoo.forumapi.modelo.Usuario;
+import com.github.julianomachadoo.forumapi.repository.CursoRepository;
 import com.github.julianomachadoo.forumapi.repository.TopicoRepository;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -40,6 +41,9 @@ class TopicosControllerTest {
 
     @MockBean
     TopicoRepository topicoRepository;
+
+    @MockBean
+    CursoRepository cursoRepository;
 
     private final Topico topico = new Topico("Titulo", "Mensagem", new Usuario(), new Curso());
     private final URI uriTopicos = new URI("/topicos");
@@ -102,6 +106,7 @@ class TopicosControllerTest {
     public void deveriaPermitirUmPostAutenticado() throws Exception {
         String token = authToken(jsonAluno);
 
+        Mockito.when(cursoRepository.findByNome(ArgumentMatchers.anyString())).thenReturn(Optional.of(new Curso()));
         Mockito.when(topicoRepository.save(ArgumentMatchers.any(Topico.class))).thenReturn(topico);
 
         mockMvc.perform(MockMvcRequestBuilders
