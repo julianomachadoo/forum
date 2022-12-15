@@ -48,6 +48,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(GET, "/topicos").permitAll()
                 .antMatchers(GET, "/topicos/*").permitAll()
+                .antMatchers(GET, "/respostas/*").permitAll()
                 .antMatchers(POST, "/auth").permitAll()
                 .antMatchers(GET, "/actuator").permitAll()
                 .antMatchers(DELETE, "/topicos/*").hasRole("MODERADOR")

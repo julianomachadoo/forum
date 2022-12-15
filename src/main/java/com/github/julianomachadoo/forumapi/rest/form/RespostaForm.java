@@ -3,24 +3,24 @@ package com.github.julianomachadoo.forumapi.rest.form;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-public class TopicoForm {
+public class RespostaForm {
 
-    @NotBlank @Length(min = 5)
-    private String titulo;
+    @NotNull
+    private Long topicoId;
+
     @NotBlank @Length(min = 10)
     private String mensagem;
-    @NotBlank
-    private String nomeCurso;
 
     private String emailUsuario;
 
-    public String getTitulo() {
-        return titulo;
+    public Long getTopicoId() {
+        return topicoId;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setTopicoId(Long topicoId) {
+        this.topicoId = topicoId;
     }
 
     public String getMensagem() {
@@ -29,14 +29,6 @@ public class TopicoForm {
 
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
-    }
-
-    public String getNomeCurso() {
-        return nomeCurso;
-    }
-
-    public void setNomeCurso(String nomeCurso) {
-        this.nomeCurso = nomeCurso;
     }
 
     public String getEmailUsuario() {

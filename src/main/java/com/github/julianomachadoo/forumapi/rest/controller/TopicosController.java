@@ -76,8 +76,8 @@ public class TopicosController {
             return ResponseEntity.created(uri).body(topicoDTO);
         }
 
-        Usuario user = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        TopicoDTO topicoDTO = topicoService.cadastrar(topicoForm, user);
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        TopicoDTO topicoDTO = topicoService.cadastrar(topicoForm, usuario);
         URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topicoDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(topicoDTO);
     }

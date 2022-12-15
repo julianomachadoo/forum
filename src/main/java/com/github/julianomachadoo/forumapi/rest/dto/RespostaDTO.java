@@ -3,6 +3,7 @@ package com.github.julianomachadoo.forumapi.rest.dto;
 import com.github.julianomachadoo.forumapi.modelo.Resposta;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class RespostaDTO {
 
@@ -14,7 +15,7 @@ public class RespostaDTO {
     public RespostaDTO (Resposta resposta) {
         this.id = resposta.getId();
         this.mensagem = resposta.getMensagem();
-        this.dataCriacao = resposta.getDataCriacao();
+        this.dataCriacao = resposta.getDataCriacao().truncatedTo(ChronoUnit.SECONDS);
         this.nomeAutor = resposta.getAutor().getNome();
     }
 

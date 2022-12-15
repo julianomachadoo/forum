@@ -28,6 +28,8 @@ public class TopicoService {
     private CursoRepository cursoRepository;
     @Autowired
     private TopicoRepository topicoRepository;
+    @Autowired
+    private ServiceUtils serviceUtils;
 
 
     public Page<Topico> listarTodos(Pageable paginacao) {
@@ -48,7 +50,7 @@ public class TopicoService {
         Topico topico = new Topico(
                 topicoForm.getTitulo(),
                 topicoForm.getMensagem(),
-                obterUsuario(topicoForm),
+                serviceUtils.obterUsuario(topicoForm.getEmailUsuario()),
                 obterCurso(topicoForm));
 
         Topico topicoSalvo = topicoRepository.save(topico);
@@ -94,13 +96,5 @@ public class TopicoService {
         Optional<Curso> optionalCurso = cursoRepository.findByNome(nomeCurso);
         if (optionalCurso.isEmpty()) throw new DadosNaoEncontradosException("Curso nao encontrado");
         return optionalCurso.get();
-    }
-
-    private Usuario obterUsuario(TopicoForm topicoForm) {
-        String emailUsuario = topicoForm.getEmailUsuario();
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(emailUsuario);
-
-        if (optionalUsuario.isEmpty()) throw new DadosNaoEncontradosException("Usuario nao encontrado");
-        return optionalUsuario.get();
     }
 }
