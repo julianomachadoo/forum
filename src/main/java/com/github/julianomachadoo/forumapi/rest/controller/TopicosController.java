@@ -85,8 +85,7 @@ public class TopicosController {
     @PutMapping("/{id}")
     @Transactional
     @CacheEvict(value = "listaDeTopicos", allEntries = true)
-    public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody AtualizacaoTopicoForm
-            form) {
+    public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody AtualizacaoTopicoForm form) {
         TopicoDTO topicoAtualizado = topicoService.atualizar(form, id);
         return ResponseEntity.ok(topicoAtualizado);
     }

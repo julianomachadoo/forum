@@ -7,6 +7,7 @@ import com.github.julianomachadoo.forumapi.modelo.Usuario;
 import com.github.julianomachadoo.forumapi.repository.RespostaRepository;
 import com.github.julianomachadoo.forumapi.repository.TopicoRepository;
 import com.github.julianomachadoo.forumapi.rest.dto.RespostaDTO;
+import com.github.julianomachadoo.forumapi.rest.form.AtualizacaoRespostaForm;
 import com.github.julianomachadoo.forumapi.rest.form.RespostaForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,6 @@ public class RespostaService {
 
     public RespostaDTO cadastrar(@Valid RespostaForm respostaForm, Usuario usuario) {
         Optional<Topico> topico = topicoRepository.findById(respostaForm.getTopicoId());
-
         if (topico.isEmpty()) throw new DadosNaoEncontradosException("Topico não encontrado");
 
         Resposta resposta = new Resposta(
@@ -56,5 +56,19 @@ public class RespostaService {
         Resposta respostaSalva = respostaRepository.save(resposta);
 
         return new RespostaDTO(respostaSalva);
+    }
+
+    public RespostaDTO atualizar(Long id, AtualizacaoRespostaForm atualizacaoRespostaForm) {
+        Optional<Resposta> resposta = respostaRepository.findById(id);
+        if (resposta.isEmpty()) throw new DadosNaoEncontradosException("Resposta não encontrada");
+
+        resposta.get().setMensagem(atualizacaoRespostaForm.getMensagem());
+        return new RespostaDTO(resposta.get());
+    }
+
+    public void remover(Long id) {
+        Optional<Resposta> resposta = respostaRepository.findById(id);
+        if (resposta.isEmpty()) throw new DadosNaoEncontradosException("Resposta não encontrada");
+        respostaRepository.deleteById(id);
     }
 }

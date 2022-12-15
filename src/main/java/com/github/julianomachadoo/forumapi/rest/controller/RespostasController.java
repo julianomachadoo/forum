@@ -3,6 +3,7 @@ package com.github.julianomachadoo.forumapi.rest.controller;
 import com.github.julianomachadoo.forumapi.modelo.Resposta;
 import com.github.julianomachadoo.forumapi.modelo.Usuario;
 import com.github.julianomachadoo.forumapi.rest.dto.RespostaDTO;
+import com.github.julianomachadoo.forumapi.rest.form.AtualizacaoRespostaForm;
 import com.github.julianomachadoo.forumapi.rest.form.RespostaForm;
 import com.github.julianomachadoo.forumapi.service.RespostaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,11 @@ public class RespostasController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<RespostaDTO> cadastrarResposta(@RequestBody @Valid RespostaForm respostaForm, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<RespostaDTO> cadastrarResposta(
+            @RequestBody @Valid RespostaForm respostaForm, UriComponentsBuilder uriBuilder) {
 
-        String authorization = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest().getHeader("Authorization");
+        String authorization = ((ServletRequestAttributes) Objects.
+                requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest().getHeader("Authorization");
         if (authorization == null) {
             RespostaDTO respostaDTO = respostaService.cadastrarAmbienteDev(respostaForm);
             URI uri = uriBuilder.path("/respostas/{id}").buildAndExpand(respostaDTO.getId()).toUri();
@@ -47,5 +50,20 @@ public class RespostasController {
         RespostaDTO respostaDTO = respostaService.cadastrar(respostaForm, usuario);
         URI uri = uriBuilder.path("/respostas/{id}").buildAndExpand(respostaDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(respostaDTO);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<RespostaDTO> atualizar
+            (@PathVariable Long id, @RequestBody @Valid AtualizacaoRespostaForm atualizacaoRespostaForm) {
+        RespostaDTO respostaDTO = respostaService.atualizar(id, atualizacaoRespostaForm);
+        return ResponseEntity.ok(respostaDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> remover(@PathVariable Long id) {
+        respostaService.remover(id);
+        return ResponseEntity.ok().build();
     }
 }
