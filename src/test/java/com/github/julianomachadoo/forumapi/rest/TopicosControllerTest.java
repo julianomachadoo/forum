@@ -232,23 +232,9 @@ class TopicosControllerTest {
     }
 
     @Test
-    public void naoDeveriaPermitirAtualizarComTituloVazio() throws Exception {
-        String token = authToken(jsonAluno);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .put(uriTopicosUm)
-                        .content(new JSONObject()
-                                .put("mensagem", "mensagem de teste")
-                                .put("titulo", " ")
-                                .toString())
-                        .contentType(APPLICATION_JSON)
-                        .header("authorization", token))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
-    @Test
     public void naoDeveriaPermitirAtualizarComTituloPequeno() throws Exception {
         String token = authToken(jsonAluno);
+        Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(uriTopicosUm)
@@ -262,22 +248,9 @@ class TopicosControllerTest {
     }
 
     @Test
-    public void naoDeveriaPermitirAtualizarComMensagemVazia() throws Exception {
-        String token = authToken(jsonAluno);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .put(uriTopicosUm)
-                        .content(new JSONObject()
-                                        .put("titulo", "titulo de teste")
-                                        .toString())
-                        .contentType(APPLICATION_JSON)
-                        .header("authorization", token))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
-    @Test
     public void naoDeveriaPermitirAtualizarComMensagemPequena() throws Exception {
         String token = authToken(jsonAluno);
+        Mockito.when(topicoRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(topico));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put(uriTopicosUm)
