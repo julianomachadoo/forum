@@ -89,4 +89,10 @@ public class TopicoService {
         }
         return new TopicoDTO(topico.get());
     }
+
+    public void removerTopico(Long id) {
+        Optional<Topico> topico = topicoRepository.findById(id);
+        if (topico.isEmpty()) throw new DadosNaoEncontradosException("Topico não encontrado");
+        topicoRepository.deleteById(id);
+    }
 }

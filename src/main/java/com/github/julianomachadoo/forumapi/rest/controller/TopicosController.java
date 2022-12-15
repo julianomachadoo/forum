@@ -28,7 +28,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("topicos")
@@ -101,11 +100,7 @@ public class TopicosController {
     @Transactional
     @CacheEvict(value = "listaDeTopicos", allEntries = true)
     public ResponseEntity<?> remover(@PathVariable Long id) {
-        Optional<Topico> optional = topicoRepository.findById(id);
-        if (optional.isPresent()) {
-            topicoRepository.deleteById(id);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+        topicoService.removerTopico(id);
+        return ResponseEntity.ok().build();
     }
 }
