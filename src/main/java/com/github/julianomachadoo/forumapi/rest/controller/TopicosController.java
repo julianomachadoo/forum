@@ -91,14 +91,10 @@ public class TopicosController {
     @PutMapping("/{id}")
     @Transactional
     @CacheEvict(value = "listaDeTopicos", allEntries = true)
-    public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid AtualizacaoTopicoForm
+    public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody AtualizacaoTopicoForm
             form) {
-        Optional<Topico> optional = topicoRepository.findById(id);
-        if (optional.isPresent()) {
-            Topico topico = form.atualizar(id, topicoRepository);
-            return ResponseEntity.ok(new TopicoDTO(topico));
-        }
-        return ResponseEntity.notFound().build();
+        TopicoDTO topicoAtualizado = topicoService.atualizar(form, id);
+        return ResponseEntity.ok(topicoAtualizado);
     }
 
     @DeleteMapping("/{id}")

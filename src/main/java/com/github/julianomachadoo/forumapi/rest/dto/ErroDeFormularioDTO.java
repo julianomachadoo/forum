@@ -1,4 +1,4 @@
-package com.github.julianomachadoo.forumapi.config.validacao;
+package com.github.julianomachadoo.forumapi.rest.dto;
 
 public class ErroDeFormularioDTO {
 

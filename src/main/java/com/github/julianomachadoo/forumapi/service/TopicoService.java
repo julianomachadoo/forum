@@ -1,9 +1,11 @@
 package com.github.julianomachadoo.forumapi.service;
 
+import com.github.julianomachadoo.forumapi.exceptions.DadosInvalidosException;
 import com.github.julianomachadoo.forumapi.rest.dto.DetalhesDoTopicoDTO;
 import com.github.julianomachadoo.forumapi.rest.dto.TopicoDTO;
+import com.github.julianomachadoo.forumapi.rest.form.AtualizacaoTopicoForm;
 import com.github.julianomachadoo.forumapi.rest.form.TopicoForm;
-import com.github.julianomachadoo.forumapi.exceptions.DadosNaoEncontrados;
+import com.github.julianomachadoo.forumapi.exceptions.DadosNaoEncontradosException;
 import com.github.julianomachadoo.forumapi.modelo.Curso;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 import com.github.julianomachadoo.forumapi.modelo.Usuario;
@@ -52,14 +54,14 @@ public class TopicoService {
 
     public DetalhesDoTopicoDTO detalharTopico(Long id) {
         Optional<Topico> optionalTopico = topicoRepository.findById(id);
-        if (optionalTopico.isEmpty()) throw new DadosNaoEncontrados("Topico nao encontrado");
+        if (optionalTopico.isEmpty()) throw new DadosNaoEncontradosException("Topico nao encontrado");
         return new DetalhesDoTopicoDTO(optionalTopico.get());
     }
 
     private Curso obterCurso(TopicoForm topicoForm) {
         String nomeCurso = topicoForm.getNomeCurso();
         Optional<Curso> optionalCurso = cursoRepository.findByNome(nomeCurso);
-        if (optionalCurso.isEmpty()) throw new DadosNaoEncontrados("Curso nao encontrado");
+        if (optionalCurso.isEmpty()) throw new DadosNaoEncontradosException("Curso nao encontrado");
         return optionalCurso.get();
     }
 
@@ -67,8 +69,24 @@ public class TopicoService {
         String emailUsuario = topicoForm.getEmailUsuario();
         Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(emailUsuario);
 
-        if (optionalUsuario.isEmpty()) throw new DadosNaoEncontrados("Usuario nao encontrado");
-        return  optionalUsuario.get();
+        if (optionalUsuario.isEmpty()) throw new DadosNaoEncontradosException("Usuario nao encontrado");
+        return optionalUsuario.get();
     }
 
+    public TopicoDTO atualizar(AtualizacaoTopicoForm form, Long id) {
+        Optional<Topico> topico = topicoRepository.findById(id);
+
+        if (topico.isEmpty()) throw new DadosNaoEncontradosException("Topico não encontrado");
+
+        if (form.getTitulo() != null && !form.getTitulo().isEmpty() && !form.getTitulo().isBlank()) {
+            if (form.getTitulo().length() < 5) throw new DadosInvalidosException("Titulo muito pequeno");
+            topico.get().setTitulo(form.getTitulo());
+        }
+
+        if (form.getMensagem() != null && !form.getMensagem().isEmpty() && !form.getMensagem().isBlank()) {
+            if (form.getMensagem().length() < 10) throw new DadosInvalidosException("Mensagem muito pequena");
+            topico.get().setMensagem(form.getMensagem());
+        }
+        return new TopicoDTO(topico.get());
+    }
 }
