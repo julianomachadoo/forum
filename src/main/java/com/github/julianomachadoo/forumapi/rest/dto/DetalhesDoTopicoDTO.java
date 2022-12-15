@@ -4,6 +4,7 @@ import com.github.julianomachadoo.forumapi.modelo.StatusTopico;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class DetalhesDoTopicoDTO {
         this.id = topico.getId();
         this.titulo = topico.getTitulo();
         this.mensagem = topico.getMensagem();
-        this.dataCriacao = topico.getDataCriacao();
+        this.dataCriacao = topico.getDataCriacao().truncatedTo(ChronoUnit.SECONDS);
         this.nomeAutor = topico.getAutor().getNome();
         this.status = topico.getStatus();
         this.respostas = new ArrayList<>();
