@@ -18,11 +18,11 @@
 
 :small_blue_diamond: [Funcionalidades](#funcionalidades)
 
-:small_blue_diamond: [Layout da Aplicação](#layout-da-aplicação-dash)
+:small_blue_diamond: [Layout da Aplicação](#layout-da-aplicação--dash-)
 
-:small_blue_diamond: [Pré-requisitos](#pré-requisitos)
+:small_blue_diamond: [Pré-requisitos](#pré-requisitos-para-rodar-a-aplicação-localmente)
 
-:small_blue_diamond: [Como rodar a aplicação](#como-rodar-a-aplicação-arrow_forward)
+:small_blue_diamond: [Como rodar a aplicação](#como-rodar-a-aplicação-localmente--arrowforward-)
 
 ...
 
@@ -42,21 +42,24 @@
 
 :ballot_box_with_check: Autorização baseada em sistema de ROLES;
 
-:ballot_box_with_check: Deploy em um servidor de núvem;
+:ballot_box_with_check: Deploy em um servidor de nuvem;
+
+:ballot_box_with_check: Endpoint de respostas.
+
 
 ...
 
-## Layout/Deploy da Aplicação :dash:
+## Layout da aplicação :dash:
 
-> Link do deploy da aplicação: http://forumapi-env.eba-ksb5s6f6.us-east-1.elasticbeanstalk.com/swagger-ui.html
-
-...
-
-![](https://raw.githubusercontent.com/julianomachadoo/forum/main/img/endpoints.png)
+> Link do deploy da aplicação: http://forumapi-env.eba-ksb5s6f6.us-east-1.elasticbeanstalk.com/
 
 ...
 
-## Pré-requisitos
+![](https://github.com/julianomachadoo/forum/blob/main/img/Projeto_Overview.gif?raw=true)
+
+...
+
+## Pré-requisitos para rodar a aplicação localmente
 
 :warning: [Java Runtime Environment](https://www.java.com/pt-BR/download/) <br>
 :warning: [Maven](https://maven.apache.org/download.cgi) <br> 
@@ -65,7 +68,7 @@ ou [Eclipse](https://www.eclipse.org/downloads/)
 
 ...
 
-## Como rodar a aplicação :arrow_forward:
+## Como rodar a aplicação localmente :arrow_forward:
 
 No terminal, clone o projeto:
 
@@ -90,7 +93,7 @@ java -jar ./target/forum.jar
 ## Como utilizar:
 
 <p align="justify">
-Em ambiente de produção, estão liberados publicamente apenas o acesso aos endpoints de listagem e detalhamento dos tópicos:
+Estão liberados publicamente apenas o acesso aos endpoints de listagem e detalhamento dos tópicos:
 </p>
 
 ![](https://github.com/julianomachadoo/forum/blob/main/img/getTopicos.gif?raw=true)
@@ -115,6 +118,17 @@ Para realizar a remoção de tópicos é necessario ter a ROLE de MODERADOR, cas
 [//]: # (deleteNaoAutorizado)
 ![](https://github.com/julianomachadoo/forum/blob/main/img/deleteNaoAutorizado.gif?raw=true)
 
+### Endpoint de Respostas
+
+<p align="justify">
+Estão liberados os endpoints de cadastro, atualização, remoção e listagem por tópico id, de respostas:
+</p>
+
+[//]: # (repostas_por_topico_id)
+![](https://github.com/julianomachadoo/forum/blob/main/img/get_respostas_por_topicoId.gif?raw=true)
+
+
+
 ...
 
 ## JSON :floppy_disk:
@@ -129,22 +143,26 @@ Para realizar a remoção de tópicos é necessario ter a ROLE de MODERADOR, cas
 ### Cursos:
 
 
-| nome      | categoria            |
-|-----------|---------------------|
-| Spring Boot     | Programação     |
-| HTML 5 | Front-end |
+| nome        | categoria   |
+|-------------|-------------|
+| Spring Boot | Programação |
+| HTML 5      | Front-end   |
 
 ...
 
 
 ## Tarefas em aberto
 
+:memo: Criar endpoint para cadastro de aluno;
 
-:memo: Endpoints de respostas e atualização de status do tópico
+:memo: Criar endpoint para tornar resposta solução;
+
+:memo: Criar endpoint para cadastrar curso (disponível apenas para MODERADOR);
+
+:memo: Continuar melhorarando a cobertura de testes
 
 :memo: Fazer migração para banco mysql ou postgreSQL
 
-:memo: Melhorar a cobertura de testes
 
 ...
 
