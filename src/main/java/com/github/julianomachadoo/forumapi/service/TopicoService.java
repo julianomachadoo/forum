@@ -13,6 +13,8 @@ import com.github.julianomachadoo.forumapi.repository.CursoRepository;
 import com.github.julianomachadoo.forumapi.repository.TopicoRepository;
 import com.github.julianomachadoo.forumapi.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,29 +29,13 @@ public class TopicoService {
     @Autowired
     private TopicoRepository topicoRepository;
 
-    public TopicoDTO cadastrarAmbienteDev(TopicoForm topicoForm) {
-        Topico topico = new Topico(
-                topicoForm.getTitulo(),
-                topicoForm.getMensagem(),
-                obterUsuario(topicoForm),
-                obterCurso(topicoForm)
-        );
 
-        Topico topicoSalvo = topicoRepository.save(topico);
-        return new TopicoDTO(topicoSalvo);
+    public Page<Topico> listarTodos(Pageable paginacao) {
+        return topicoRepository.findAll(paginacao);
     }
 
-
-    public TopicoDTO cadastrar(TopicoForm topicoForm, Usuario usuario) {
-        Topico topico = new Topico(
-                topicoForm.getTitulo(),
-                topicoForm.getMensagem(),
-                usuario,
-                obterCurso(topicoForm)
-        );
-
-        Topico topicoSalvo = topicoRepository.save(topico);
-        return new TopicoDTO(topicoSalvo);
+    public Page<Topico> listarPorCursoNome(String nomeCurso, Pageable paginacao) {
+        return topicoRepository.findByCurso_Nome(nomeCurso, paginacao);
     }
 
     public DetalhesDoTopicoDTO detalharTopico(Long id) {
@@ -58,19 +44,26 @@ public class TopicoService {
         return new DetalhesDoTopicoDTO(optionalTopico.get());
     }
 
-    private Curso obterCurso(TopicoForm topicoForm) {
-        String nomeCurso = topicoForm.getNomeCurso();
-        Optional<Curso> optionalCurso = cursoRepository.findByNome(nomeCurso);
-        if (optionalCurso.isEmpty()) throw new DadosNaoEncontradosException("Curso nao encontrado");
-        return optionalCurso.get();
+    public TopicoDTO cadastrarAmbienteDev(TopicoForm topicoForm) {
+        Topico topico = new Topico(
+                topicoForm.getTitulo(),
+                topicoForm.getMensagem(),
+                obterUsuario(topicoForm),
+                obterCurso(topicoForm));
+
+        Topico topicoSalvo = topicoRepository.save(topico);
+        return new TopicoDTO(topicoSalvo);
     }
 
-    private Usuario obterUsuario(TopicoForm topicoForm) {
-        String emailUsuario = topicoForm.getEmailUsuario();
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(emailUsuario);
+    public TopicoDTO cadastrar(TopicoForm topicoForm, Usuario usuario) {
+        Topico topico = new Topico(
+                topicoForm.getTitulo(),
+                topicoForm.getMensagem(),
+                usuario,
+                obterCurso(topicoForm));
 
-        if (optionalUsuario.isEmpty()) throw new DadosNaoEncontradosException("Usuario nao encontrado");
-        return optionalUsuario.get();
+        Topico topicoSalvo = topicoRepository.save(topico);
+        return new TopicoDTO(topicoSalvo);
     }
 
     public TopicoDTO atualizar(AtualizacaoTopicoForm form, Long id) {
@@ -94,5 +87,20 @@ public class TopicoService {
         Optional<Topico> topico = topicoRepository.findById(id);
         if (topico.isEmpty()) throw new DadosNaoEncontradosException("Topico não encontrado");
         topicoRepository.deleteById(id);
+    }
+
+    private Curso obterCurso(TopicoForm topicoForm) {
+        String nomeCurso = topicoForm.getNomeCurso();
+        Optional<Curso> optionalCurso = cursoRepository.findByNome(nomeCurso);
+        if (optionalCurso.isEmpty()) throw new DadosNaoEncontradosException("Curso nao encontrado");
+        return optionalCurso.get();
+    }
+
+    private Usuario obterUsuario(TopicoForm topicoForm) {
+        String emailUsuario = topicoForm.getEmailUsuario();
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(emailUsuario);
+
+        if (optionalUsuario.isEmpty()) throw new DadosNaoEncontradosException("Usuario nao encontrado");
+        return optionalUsuario.get();
     }
 }

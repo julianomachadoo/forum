@@ -4,7 +4,6 @@ import com.github.julianomachadoo.forumapi.config.security.TokenService;
 import com.github.julianomachadoo.forumapi.modelo.Topico;
 import com.github.julianomachadoo.forumapi.modelo.Usuario;
 import com.github.julianomachadoo.forumapi.repository.CursoRepository;
-import com.github.julianomachadoo.forumapi.repository.TopicoRepository;
 import com.github.julianomachadoo.forumapi.repository.UsuarioRepository;
 import com.github.julianomachadoo.forumapi.rest.dto.DetalhesDoTopicoDTO;
 import com.github.julianomachadoo.forumapi.rest.dto.TopicoDTO;
@@ -34,9 +33,6 @@ import java.util.Objects;
 public class TopicosController {
 
     @Autowired
-    TopicoRepository topicoRepository;
-
-    @Autowired
     CursoRepository cursoRepository;
     @Autowired
     TokenService tokenService;
@@ -45,8 +41,7 @@ public class TopicosController {
     @Autowired
     private TopicoService topicoService;
 
-    public TopicosController(TopicoRepository topicoRepository, CursoRepository cursoRepository, UsuarioRepository usuarioRepository) {
-        this.topicoRepository = topicoRepository;
+    public TopicosController(CursoRepository cursoRepository, UsuarioRepository usuarioRepository) {
         this.cursoRepository = cursoRepository;
         this.usuarioRepository = usuarioRepository;
     }
@@ -56,9 +51,9 @@ public class TopicosController {
     public Page<TopicoDTO> lista(@RequestParam(required = false) String nomeCurso, @PageableDefault Pageable paginacao) {
         Page<Topico> topicos;
         if (nomeCurso == null) {
-            topicos = topicoRepository.findAll(paginacao);
+            topicos = topicoService.listarTodos(paginacao);
         } else {
-            topicos = topicoRepository.findByCurso_Nome(nomeCurso, paginacao);
+            topicos = topicoService.listarPorCursoNome(nomeCurso, paginacao);
         }
         return TopicoDTO.converter(topicos);
     }
