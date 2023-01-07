@@ -51,7 +51,7 @@
 
 ## Layout da aplicação :dash:
 
-> Link do deploy da aplicação: http://forumapi-env.eba-ksb5s6f6.us-east-1.elasticbeanstalk.com/
+> Link do deploy da aplicação: http://forumapi-env.eba-guqgabap.us-east-1.elasticbeanstalk.com/
 
 ...
 
